@@ -1,37 +1,58 @@
 ﻿@model WebCore.AdminUI.Models.LoginModel
 
 <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Generic - Control Panel</title>
-    <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet">
-    <link href="~/assets/css/main.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/assets/css/core.css">
+    <link rel="stylesheet" href="~/assets/fonts/feather-font/css/iconfont.css">
+    <link rel="stylesheet" href="~/assets/fonts/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="~/assets/css/style.min.css">
 </head>
-<div class="auth-layout-wrap">
-    <div class="auth-content">
-        <div class="card o-hidden">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="p-4">
-                        <div class="auth-logo text-center mb-4"><img src="~/assets/images/logo.png" alt=""></div>
-                        <p>@Model?.ErrorMessage</p>
-                        <form asp-controller="login" method="post">
-                            <input type="hidden" asp-for="ReturnUrl" value="@(Model?.ReturnUrl ?? Context.Request.Query["ReturnUrl"])" />
-                            <div class="form-group">
-                                <label for="email">Email address</label>
-                                <input class="form-control form-control-rounded" id="email" type="email" asp-for="Email" value="kulijanishvilig@gmail.com">
+<body class="sidebar-dark">
+    <div class="main-wrapper">
+        <div class="page-wrapper full-page">
+            <div class="page-content d-flex align-items-center justify-content-center">
+
+                <div class="row w-100 mx-0 auth-page">
+                    <div class="col-md-6 col-xl-3 mx-auto">
+                        <div class="card">
+                            <div class="row">
+                                <div class="col-md-12 pl-md-0">
+                                    <div class="auth-form-wrapper px-4 py-3">
+                                        <a href="" class="noble-ui-logo d-block mb-2">G<span>eneric</span></a>
+                                        <p class="mb-2">@Model?.ErrorMessage</p>
+                                        <form class="forms-sample" asp-controller="login" method="post">
+                                            <input type="hidden" asp-for="ReturnUrl" value="@(Model?.ReturnUrl ?? Context.Request.Query["ReturnUrl"])" />
+                                            <div class="form-group">
+                                                <label for="email">Email address</label>
+                                                <input type="email" class="form-control" id="email" placeholder="Email" asp-for="Email" value="kulijanishvilig@gmail.com">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password">Password</label>
+                                                <input type="password" class="form-control" id="password" autocomplete="current-password" placeholder="Password" asp-for="Password" value="Aa123456!">
+                                            </div>
+                                            <div class="mt-3">
+                                                <button class="btn btn-primary mr-2 mb-2 mb-md-0 text-white">Sign In</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="password">Password</label>
-                                <input class="form-control form-control-rounded" id="password" type="password" asp-for="Password" autocomplete="off" value="Aa123456!">
-                            </div>
-                            <button class="btn btn-rounded btn-primary btn-block mt-2">Sign In</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
-</div>
+
+    <script src="~/assets/js/core.js"></script>
+    <script src="~/assets/fonts/feather-font/js/feather.min.js"></script>
+    <script src="~/assets/js/template.js"></script>
+</body>
+</html>
