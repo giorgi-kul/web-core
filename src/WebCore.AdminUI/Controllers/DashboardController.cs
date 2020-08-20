@@ -9,6 +9,7 @@ namespace WebCore.AdminUI.Controllers
 {
     public class DashboardController : BaseAuthController
     {
+        private readonly string _dashboardView = "~/Views/Dashboard/Dashboard.cshtml";
         private readonly ILogger<DashboardController> _logger;
 
         public DashboardController(ILogger<DashboardController> logger)
@@ -17,7 +18,7 @@ namespace WebCore.AdminUI.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            return View(_dashboardView);
         }
     }
 }
