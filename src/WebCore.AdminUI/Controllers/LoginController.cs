@@ -46,7 +46,11 @@ namespace WebCore.AdminUI.Controllers
 
                 if (isValidPassword)
                 {
-                    List<Claim> claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, loginModel.Email) };
+                    List<Claim> claims = new List<Claim> {
+                        new Claim(ClaimTypes.NameIdentifier, loginModel.Email),
+                        new Claim(ClaimTypes.Sid, administrator.Id),
+                    };
+
 
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);

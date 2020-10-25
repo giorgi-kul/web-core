@@ -25,10 +25,15 @@ namespace WebCore.Services
         {
             AdministratorAction userAction = new AdministratorAction()
             {
-                Date = DateTime.Now,
+                CreateDate = DateTime.Now,
                 Type = type,
                 Location = location,
-                Administrator = administrator
+                Administrator = administrator,
+                CreatedBy = null,
+                LastModifiedBy = null,
+                LastModifyDate = null,
+                IsDeleted = false,
+                IsVisible = true
             };
 
             _context.AdministratorActions.Add(userAction);

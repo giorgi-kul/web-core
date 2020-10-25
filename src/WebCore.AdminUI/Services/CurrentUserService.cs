@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Security.Claims;
 using WebCore.Domain.Interfaces;
 
@@ -8,10 +9,16 @@ namespace WebCore.AdminUI.Services
     {
         public CurrentUserService(IHttpContextAccessor httpContextAccessor)
         {
-            Email = httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            ClaimsPrincipal user = httpContextAccessor.HttpContext?.User;
+
+            if (user != null)
+            {
+                Email = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                UserId = user.FindFirstValue(ClaimTypes.Sid);
+            }
         }
 
-        public int? UserId { get; }
+        public string UserId { get; }
         public string Email { get; }
     }
 }

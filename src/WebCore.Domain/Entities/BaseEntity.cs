@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WebCore.Domain.Models.Admin;
 
 namespace WebCore.Domain.Entities
 {
@@ -8,6 +9,7 @@ namespace WebCore.Domain.Entities
     {
         private DateTime? _createDate;
 
+        [ModuleSettings(Order = 1)]
         public int Id { get; set; }
 
         public virtual DateTime CreateDate

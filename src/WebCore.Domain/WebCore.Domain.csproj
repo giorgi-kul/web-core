@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200817135012_logs.cs" />
     <Compile Remove="Migrations\20200817135012_logs.Designer.cs" />
+    <Compile Remove="Migrations\20200820160932_entity-corrections.cs" />
+    <Compile Remove="Migrations\20200820160932_entity-corrections.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,6 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Folder Include="Models\Front\" />
   </ItemGroup>
 </Project>

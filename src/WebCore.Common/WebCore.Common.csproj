@@ -8,4 +8,8 @@
     <Folder Include="Exceptions\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebCore.Domain\WebCore.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

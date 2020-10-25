@@ -34,11 +34,11 @@ namespace WebCore.Domain.Database
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = this.Administrators.FindAsync(_currentUserService.UserId.Value).Result;
+                        entry.Entity.CreatedBy = this.Administrators.FindAsync(_currentUserService.UserId).Result;
                         entry.Entity.CreateDate = DateTime.Now;
                         break;
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedBy = this.Administrators.FindAsync(_currentUserService.UserId.Value).Result;
+                        entry.Entity.LastModifiedBy = this.Administrators.FindAsync(_currentUserService.UserId).Result;
                         entry.Entity.LastModifyDate = DateTime.Now;
                         break;
                 }

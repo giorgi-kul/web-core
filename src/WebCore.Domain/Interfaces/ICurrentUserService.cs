@@ -6,7 +6,7 @@ namespace WebCore.Domain.Interfaces
 {
     public interface ICurrentUserService
     {
-        int? UserId { get; }
+        string UserId { get; }
         string Email { get; }
     }
 }

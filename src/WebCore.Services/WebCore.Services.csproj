@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebCore.Common\WebCore.Common.csproj" />
     <ProjectReference Include="..\WebCore.Domain\WebCore.Domain.csproj" />
   </ItemGroup>
 

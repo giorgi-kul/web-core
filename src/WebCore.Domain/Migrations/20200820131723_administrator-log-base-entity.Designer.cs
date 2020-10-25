@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebCore.Domain.Database;
 
 namespace WebCore.Domain.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200820131723_administrator-log-base-entity")]
+    partial class administratorlogbaseentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,28 +316,7 @@ namespace WebCore.Domain.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsVisible")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("LastModifyDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OrderIndex")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Type")
@@ -344,10 +325,6 @@ namespace WebCore.Domain.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AdministratorId");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("LastModifiedById");
 
                     b.ToTable("AdministratorActions");
                 });
@@ -362,23 +339,8 @@ namespace WebCore.Domain.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Exception")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsVisible")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("LastModifyDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Level")
                         .HasColumnType("nvarchar(max)");
@@ -386,23 +348,13 @@ namespace WebCore.Domain.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderIndex")
-                        .HasColumnType("int");
-
                     b.Property<string>("Properties")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("LastModifiedById");
 
                     b.ToTable("Logs");
                 });
@@ -463,25 +415,6 @@ namespace WebCore.Domain.Migrations
                     b.HasOne("WebCore.Domain.Entities.Administrator", "Administrator")
                         .WithMany()
                         .HasForeignKey("AdministratorId");
-
-                    b.HasOne("WebCore.Domain.Entities.Administrator", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("WebCore.Domain.Entities.Administrator", "LastModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("LastModifiedById");
-                });
-
-            modelBuilder.Entity("WebCore.Domain.Entities.Log", b =>
-                {
-                    b.HasOne("WebCore.Domain.Entities.Administrator", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("WebCore.Domain.Entities.Administrator", "LastModifiedBy")
-                        .WithMany()
-                        .HasForeignKey("LastModifiedById");
                 });
 #pragma warning restore 612, 618
         }
