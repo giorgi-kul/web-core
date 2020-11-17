@@ -27,6 +27,7 @@ namespace WebCore.AdminUI.Controllers
         protected virtual string ListView => "~/Views/Generic/List.cshtml";
         protected virtual string CreateView => "~/Views/Generic/AddEdit.cshtml";
         protected virtual string EditView => "~/Views/Generic/AddEdit.cshtml";
+        protected virtual string DetailsView => "~/Views/Generic/Details.cshtml";
 
         protected virtual bool IsSingleItemView => false;
         protected virtual bool DetailsEnabled => false;
@@ -79,6 +80,30 @@ namespace WebCore.AdminUI.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Details([FromQuery] int? page, int id)
+        {
+            AdminAddEditModel model = new AdminAddEditModel();
+
+            if (!DetailsEnabled)
+            {
+                SetErrorAlert("Details view is not enabled for this module.");
+                return RedirectToList(page);
+            }
+
+            T item = await _context.Set<T>().ActiveSet().FirstOrDefaultAsync(i => i.Id == id);
+            if (item == null)
+            {
+                SetErrorAlert("Requested record was not found.");
+                return RedirectToList(page);
+            }
+
+            model.Properties = Properties;
+            model.Item = item;
+
+            return View(DetailsView, model);
+        }
+
         protected virtual Expression<Func<T, bool>> GetFilterPredicate()
         {
             return x => true;
@@ -89,6 +114,30 @@ namespace WebCore.AdminUI.Controllers
             return query.OrderByDescending(t => t.Id);
         }
 
+
+        protected virtual IActionResult RedirectToList(int? pageId = null)
+        {
+            return RedirectToAction("", new { page = pageId });
+        }
+        protected void SetErrorAlert(string message)
+        {
+            SetAlert(message, AlertType.Error);
+        }
+        protected void SetSuccessAlert(string message)
+        {
+            SetAlert(message, AlertType.Success);
+        }
+        protected void SetWarningAlert(string message)
+        {
+            SetAlert(message, AlertType.Warning);
+        }
+        private void SetAlert(string message, AlertType type)
+        {
+            if (string.IsNullOrWhiteSpace(message)) { return; }
+
+            TempData["alertType"] = type;
+            TempData["alertMessage"] = message;
+        }
         private AdminListModel CreateAdminListModel(int totalCount, List<T> listItems)
         {
             AdminListModel model = new AdminListModel();

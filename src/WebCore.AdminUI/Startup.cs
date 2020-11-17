@@ -39,6 +39,11 @@ namespace WebCore.AdminUI
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
 
+            services.Configure<CookieTempDataProviderOptions>(options =>
+            {
+                options.Cookie.IsEssential = true;
+            });
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;

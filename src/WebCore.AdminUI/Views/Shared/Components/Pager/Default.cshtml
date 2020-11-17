@@ -1,0 +1,46 @@
+﻿@model WebCore.AdminUI.Models.VcModels.PagerVcModel
+
+<nav aria-label="Page navigation example" style="@Model.NavStyle">
+    <ul class="pagination justify-content-end">
+        @if (Model.ShowLeftArrow)
+        {
+            <li class="page-item"><a class="page-link" href="@Model.PreviousUrl"><i data-feather="chevron-left"></i></a></li>
+        }
+
+
+        @if (Model.CurrentPageNumber <= (Model.ShownPageNumber / 2) + 1)
+        {
+            for (int i = 1; i <= Model.ShownPageNumber; i++)
+            {
+                if (i <= Model.PageCount)
+                {
+                    <li class="page-item @Model.GetActiveClass(i)"><a class="page-link" href="@Model.GetUrl(i)">@i</a></li>
+                }
+            }
+        }
+        else if (Model.CurrentPageNumber >= Model.PageCount - (Model.ShownPageNumber / 2) + 1)
+        {
+            for (int i = Model.PageCount - Model.ShownPageNumber + 1; i <= Model.PageCount; i++)
+            {
+                if (i == 0) { continue; }
+                <li class="page-item @Model.GetActiveClass(i)"><a class="page-link" href="@Model.GetUrl(i)">@i</a></li>
+            }
+        }
+        else
+        {
+            for (int i = Model.CurrentPageNumber - (Model.ShownPageNumber / 2); i <= Model.CurrentPageNumber + (Model.ShownPageNumber / 2); i++)
+            {
+                if (i <= Model.PageCount)
+                {
+                    string activeClass = i == Model.CurrentPageNumber ? "active" : "";
+                    <li class="page-item @Model.GetActiveClass(i)"><a class="page-link" href="@Model.GetUrl(i)">@i</a></li>
+                }
+            }
+        }
+
+        @if (Model.ShowRightArrow)
+        {
+            <li class="page-item"><a class="page-link" href="@Model.NextUrl"><i data-feather="chevron-right"></i></a></li>
+        }
+    </ul>
+</nav>

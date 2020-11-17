@@ -11,10 +11,14 @@
 </nav>
 
 <div class="row">
+    <div class="col-md-12">
+        <vc:alert-message></vc:alert-message>
+    </div>
+
     @if (Model.CreateEnabled)
     {
         <div class="col-md-12">
-            <a href="" class="btn btn-primary mb-3">Create new</a>
+            <a href="" class="btn btn-primary mb-3"></a>
         </div>
     }
 
@@ -79,23 +83,17 @@
                                         <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                             @if (Model.DetailsEnabled)
                                             {
-                                                <button type="button" class="btn btn-secondary btn-icon">
-                                                    <i data-feather="file-text"></i>
-                                                </button>
+                                                <vc:generic-button action="details" controller="@ViewContext.RouteData.Values["controller"].ToString()" id="@item.Id" button-class="btn btn-secondary btn-icon" icon-class="file-text"></vc:generic-button>
                                             }
 
                                             @if (Model.EditEnabled)
                                             {
-                                                <button type="button" class="btn btn-primary btn-icon">
-                                                    <i data-feather="edit"></i>
-                                                </button>
+                                                <vc:generic-button action="edit" controller="@ViewContext.RouteData.Values["controller"].ToString()" id="@item.Id" button-class="btn btn-primary btn-icon" icon-class="edit"></vc:generic-button>
                                             }
 
                                             @if (Model.DeleteEnabled)
                                             {
-                                                <button type="button" class="btn btn-danger btn-icon">
-                                                    <i data-feather="trash"></i>
-                                                </button>
+                                                <vc:generic-button action="" controller="" id="@item.Id" button-class="btn btn-danger btn-icon" icon-class="trash"></vc:generic-button>
                                             }
                                         </div>
                                     </td>
@@ -108,118 +106,6 @@
         </div>
     </div>
     <div class="col-md-12">
-        @RenderPager(5, Model.TotalCount, Model.ItemsPerPage)
+        <vc:pager shown-page-number="5" , total-items="@Model.TotalCount" items-per-page="@Model.ItemsPerPage"></vc:pager>
     </div>
 </div>
-
-
-@{
-    string RenderPager(int shownPageNumber, int totalItems, int itemsPerPage)
-    {
-        int pageCount = Convert.ToInt32(Math.Ceiling((double)totalItems / (double)itemsPerPage));
-        string currentUrl = Context.Request.GetDisplayUrl();
-
-        int queryStringIndex = currentUrl.IndexOf("?");
-        if (queryStringIndex > 0)
-        {
-            currentUrl = currentUrl.Substring(0, queryStringIndex);
-        }
-
-        bool showLeftArrow = true;
-        bool showRigthArrow = true;
-        int currentPageNumber = 1;
-        System.Text.StringBuilder queryStrings = new System.Text.StringBuilder();
-
-        foreach (String key in Context.Request.Query.Keys)
-        {
-            if (key != "page")
-            {
-                queryStrings.Append($"&{key}={Context.Request.Query[key]}");
-            }
-        }
-
-        if (Context.Request.Query.Keys.Contains("page"))
-        {
-            if (int.TryParse(Context.Request.Query["page"], out currentPageNumber))
-            {
-                if (currentPageNumber > pageCount)
-                {
-                    currentPageNumber = pageCount;
-                }
-
-                if (currentPageNumber <= 0)
-                {
-                    currentPageNumber = 1;
-                }
-            }
-            else { currentPageNumber = 1; }
-        }
-
-        string previousUrl = currentPageNumber != 1 ? $"{currentUrl}?page={currentPageNumber - 1}{queryStrings.ToString()}" : "javascript:void(0)";
-        string nextUrl = currentPageNumber != pageCount ? $"{currentUrl}?page={currentPageNumber + 1}{queryStrings.ToString()}" : "javascript:void(0)";
-        string firstPageUrl = $"{currentUrl}?page=1{queryStrings.ToString()}";
-        string firstPageActive = currentPageNumber == 1 ? "active" : "";
-        string lastPageUrl = $"{currentUrl}?page={pageCount}{queryStrings.ToString()}";
-
-        string navStyle = string.Empty;
-
-        if (totalItems <= 0)
-        {
-            navStyle = "display:none;";
-        }
-
-        <nav aria-label="Page navigation example" style="@navStyle">
-            <ul class="pagination justify-content-end">
-                @if (showLeftArrow)
-                {
-                    <li class="page-item"><a class="page-link" href="@previousUrl"><i data-feather="chevron-left"></i></a></li>
-                }
-
-
-                @if (currentPageNumber <= (shownPageNumber / 2) + 1)
-                {
-                    for (int i = 1; i <= shownPageNumber; i++)
-                    {
-                        string url = $"{currentUrl}?page={i}{queryStrings.ToString()}";
-                        string activeClass = i == currentPageNumber ? "active" : "";
-                        if (i <= pageCount)
-                        {
-                            <li class="page-item @activeClass"><a class="page-link" href="@url">@i</a></li>
-                        }
-                    }
-                }
-                else if (currentPageNumber >= pageCount - (shownPageNumber / 2) + 1)
-                {
-                    for (int i = pageCount - shownPageNumber + 1; i <= pageCount; i++)
-                    {
-                        if(i == 0) { continue; }
-                        string url = $"{currentUrl}?page={i}{queryStrings.ToString()}";
-                        string activeClass = i == currentPageNumber ? "active" : "";
-                        <li class="page-item @activeClass"><a class="page-link" href="@url">@i</a></li>
-
-                    }
-                }
-                else
-                {
-                    for (int i = currentPageNumber - (shownPageNumber / 2); i <= currentPageNumber + (shownPageNumber / 2); i++)
-                    {
-                        if (i <= pageCount)
-                        {
-
-                            string url = $"{currentUrl}?page={i}{queryStrings.ToString()}";
-                            string activeClass = i == currentPageNumber ? "active" : "";
-                            <li class="page-item @activeClass"><a class="page-link" href="@url">@i</a></li>
-                        }
-                    }
-                }
-
-                @if (showRigthArrow)
-                {
-                    <li class="page-item"><a class="page-link" href="@nextUrl"><i data-feather="chevron-right"></i></a></li>
-                }
-            </ul>
-        </nav>
-
-        return "";
-    }
-}

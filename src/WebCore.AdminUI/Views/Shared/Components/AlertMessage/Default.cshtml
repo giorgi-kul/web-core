@@ -1,0 +1,29 @@
+﻿@{
+    string alertMessage = TempData["alertMessage"]?.ToString();
+
+
+    string GetAlertClass()
+    {
+        if (String.IsNullOrWhiteSpace(alertMessage)) { return null; }
+
+        WebCore.Domain.Models.Admin.AlertType alertType = (WebCore.Domain.Models.Admin.AlertType)TempData["alertType"];
+
+        switch (alertType)
+        {
+            case WebCore.Domain.Models.Admin.AlertType.Error:
+            default:
+                return "alert-fill-danger";
+            case WebCore.Domain.Models.Admin.AlertType.Success:
+                return "alert-fill-success";
+            case WebCore.Domain.Models.Admin.AlertType.Warning:
+                return "alert-fill-warning";
+        }
+    }
+}
+
+@if (!String.IsNullOrWhiteSpace(alertMessage))
+{
+    <div class="alert @GetAlertClass()" role="alert">
+        @alertMessage
+    </div>
+}

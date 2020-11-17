@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -19,15 +20,18 @@ namespace WebCore.AdminUI.Controllers
         private readonly UserManager<Administrator> _userManager;
         private readonly ILogger<LoginController> _logger;
         private readonly IUserActionService _userActionService;
+        private readonly IConfiguration _configuration;
 
         public LoginController(
             UserManager<Administrator> userManager,
             ILogger<LoginController> logger,
-            IUserActionService userActionService)
+            IUserActionService userActionService,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _logger = logger;
             _userActionService = userActionService;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -55,7 +59,11 @@ namespace WebCore.AdminUI.Controllers
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
 
-                    AuthenticationProperties authProperties = new AuthenticationProperties();
+                    AuthenticationProperties authProperties = new AuthenticationProperties
+                    {
+                        AllowRefresh = true,
+                        ExpiresUtc = DateTime.UtcNow.AddMinutes(Convert.ToInt32(_configuration.GetSection("AuthenticationTicketDurationInMin").Value))
+                    };
 
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 
