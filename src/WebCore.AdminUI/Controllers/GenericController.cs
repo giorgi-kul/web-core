@@ -106,7 +106,65 @@ namespace WebCore.AdminUI.Controllers
 
         protected virtual Expression<Func<T, bool>> GetFilterPredicate()
         {
-            return x => true;
+            Expression<Func<T, bool>> predicate = x => true;
+
+            foreach (var prop in Properties)
+            {
+                if (prop.Settings.Filter)
+                {
+                    string val = Request.Query[$"filter.{prop.Property.Name.ToLower()}"];
+                    string valFrom = Request.Query[$"filter.{prop.Property.Name.ToLower()}.from"];
+                    string valTo = Request.Query[$"filter.{prop.Property.Name.ToLower()}.to"];
+
+                    if (!String.IsNullOrWhiteSpace(val)
+                        || !String.IsNullOrWhiteSpace(valFrom)
+                        || !String.IsNullOrWhiteSpace(valTo))
+                    {
+                        if (prop.Property.PropertyType == typeof(DateTime))
+                            predicate = predicate.And(DateTimeFieldFilterPredicate(prop, valFrom, valTo));
+                        else
+                            predicate = predicate.And(StringFieldFilterPredicate(prop, val));
+                    }
+                }
+            }
+
+            return predicate;
+        }
+
+        private Expression<Func<T, bool>> StringFieldFilterPredicate(PropertyModel prop, string val)
+        {
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, prop.Property.Name); //x.{DynamicPropertyName}
+            var contains = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+            var value = Expression.Constant(val);
+            var body = Expression.Call(property, contains, value); //x.{DynamicPropertyName}.Contains(val)
+            return Expression.Lambda<Func<T, bool>>(body, parameter); //x => it.{DynamicPropertyName}.Contains(val)
+        }
+        private Expression<Func<T, bool>> DateTimeFieldFilterPredicate(PropertyModel prop, string valFrom, string valTo)
+        {
+            BinaryExpression firstBody = null;
+            BinaryExpression secondBody = null;
+
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(parameter, prop.Property.Name); //x.{DynamicPropertyName}
+
+            if (!String.IsNullOrWhiteSpace(valFrom))
+                if (DateTime.TryParseExact(valFrom, new string[] { "dd.MM.yyyy" }, null, System.Globalization.DateTimeStyles.None, out DateTime dateFrom))
+                    firstBody = Expression.GreaterThanOrEqual(property, Expression.Constant(dateFrom));
+
+            if (!String.IsNullOrWhiteSpace(valTo))
+                if (DateTime.TryParseExact(valTo, new string[] { "dd.MM.yyyy" }, null, System.Globalization.DateTimeStyles.None, out DateTime dateTo))
+                    secondBody = Expression.LessThanOrEqual(property, Expression.Constant(dateTo.AddDays(1)));
+
+            Expression body = null;
+            if (firstBody != null & secondBody != null)
+                body = Expression.And(firstBody, secondBody);
+            else if (firstBody != null)
+                body = firstBody;
+            else if (secondBody != null)
+                body = secondBody;
+
+            return Expression.Lambda<Func<T, bool>>(body, parameter);
         }
 
         protected virtual IQueryable<T> Order(IQueryable<T> query)

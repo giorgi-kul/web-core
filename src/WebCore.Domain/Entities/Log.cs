@@ -7,10 +7,13 @@ namespace WebCore.Domain.Entities
 {
     public class Log : ModuleEntity
     {
+        [ModuleSettings(Filter = true)]
         public string Level { get; set; }
+        [ModuleSettings(DisplayName = nameof(Message))]
         public override string Title => Message?.Length > 80 ? $"{Message.Substring(0, 80)}..." : Message;
-        [ModuleSettings(IsListVisible = false)]
+        [ModuleSettings(IsListVisible = false, Filter = true)]
         public string Message { get; set; }
+        [ModuleSettings(Filter = true)]
         public DateTime TimeStamp { get; set; }
         [ModuleSettings(IsListVisible = false)]
         public string Exception { get; set; }

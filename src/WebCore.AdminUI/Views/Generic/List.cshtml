@@ -22,6 +22,8 @@
         </div>
     }
 
+    <vc:generic-filter properties="@Model.Properties"></vc:generic-filter>
+
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -109,3 +111,5 @@
         <vc:pager shown-page-number="5" , total-items="@Model.TotalCount" items-per-page="@Model.ItemsPerPage"></vc:pager>
     </div>
 </div>
+
+

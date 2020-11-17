@@ -18,7 +18,7 @@ namespace WebCore.Domain.Models.Admin
         public string DisplayName { get; set; }
         public int Order { get; set; }
         public bool IsListVisible { get; set; } = true;
-        public bool IsFilterVisible { get; set; }
+        public bool Filter { get; set; }
         public bool IsHidden { get; set; }
         public bool IsReadOnly { get; set; }
         public Type RelatedModuleType { get; set; }
