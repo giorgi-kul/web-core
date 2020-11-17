@@ -8,10 +8,10 @@ namespace WebCore.Domain.Entities
     public class AuditableEntity : BaseEntity
     {
         [ModuleSettings(IsListVisible = false)]
-        public Administrator CreatedBy { get; set; }
+        public virtual Administrator CreatedBy { get; set; }
         [ModuleSettings(IsListVisible = false)]
-        public Administrator LastModifiedBy { get; set; }
+        public virtual Administrator LastModifiedBy { get; set; }
         [ModuleSettings(IsListVisible = false)]
-        public DateTime? LastModifyDate { get; set; }
+        public virtual DateTime? LastModifyDate { get; set; }
     }
 }

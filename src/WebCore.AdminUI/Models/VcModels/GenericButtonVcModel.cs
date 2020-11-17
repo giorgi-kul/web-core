@@ -10,5 +10,6 @@ namespace WebCore.AdminUI.Models.VcModels
         public string IconClass { get; set; }
         public string ButtonClass { get; set; }
         public string Url { get; set; }
+        public string ButtonText { get; set; }
     }
 }

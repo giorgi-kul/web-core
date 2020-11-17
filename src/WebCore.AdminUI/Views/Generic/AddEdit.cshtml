@@ -1,4 +1,46 @@
-﻿@{
+﻿@model WebCore.Domain.Models.Admin.AdminAddEditModel
+@{
     Layout = "~/Views/_Layout.cshtml";
 }
 
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Forms</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Basic Elements</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">@Model.FormTitle</h6>
+                <form class="forms-sample">
+                    @foreach (var property in Model.Properties)
+                    {
+                        if (!property.Settings.IsHidden)
+                        {
+                            <div class="form-group row">
+                                <label for="exampleInputUsername2" class="col-sm-1 col-form-label">@property.GetPropertyName()</label>
+                                <div class="col-sm-11">
+                                    <vc:generic-field-input property="@property" item="@Model.Item" read-only="@Model.IsReadOnlyView"></vc:generic-field-input>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    <div class="form-group row">
+                        <label for="exampleInputUsername2" class="col-sm-1 col-form-label"></label>
+                        <div class="col-sm-11">
+                            @if (Model.PageMode == PageMode.Create || Model.PageMode == PageMode.Edit)
+                            {
+                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            }
+                            <vc:generic-button action="" controller="@ViewContext.RouteData.Values["controller"].ToString()" id="null" button-text="Cancel" button-class="btn btn-outline-primary btn-icon-text" icon-class="arrow-left"></vc:generic-button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

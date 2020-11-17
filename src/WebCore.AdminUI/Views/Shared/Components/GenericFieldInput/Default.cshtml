@@ -1,0 +1,11 @@
+﻿@model WebCore.AdminUI.Models.VcModels.GenericFieldInputVcModel
+
+@if (Model.ReadOnly.HasValue && Model.ReadOnly.Value)
+{
+    <p class="col-form-label">@Model.Value</p>
+}
+else
+{
+    <input type="text" class="form-control" id="@Model.Property.Property.Name" autocomplete="off" value="@Model.Value">
+}
+

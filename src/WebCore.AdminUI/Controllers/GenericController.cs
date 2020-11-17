@@ -25,8 +25,7 @@ namespace WebCore.AdminUI.Controllers
         private readonly DataContext _context;
 
         protected virtual string ListView => "~/Views/Generic/List.cshtml";
-        protected virtual string CreateView => "~/Views/Generic/AddEdit.cshtml";
-        protected virtual string EditView => "~/Views/Generic/AddEdit.cshtml";
+        protected virtual string CreateEditDetailsView => "~/Views/Generic/AddEdit.cshtml";
         protected virtual string DetailsView => "~/Views/Generic/Details.cshtml";
 
         protected virtual bool IsSingleItemView => false;
@@ -98,10 +97,11 @@ namespace WebCore.AdminUI.Controllers
                 return RedirectToList(page);
             }
 
+            model.PageMode = PageMode.Details;
             model.Properties = Properties;
             model.Item = item;
 
-            return View(DetailsView, model);
+            return View(CreateEditDetailsView, model);
         }
 
         protected virtual Expression<Func<T, bool>> GetFilterPredicate()

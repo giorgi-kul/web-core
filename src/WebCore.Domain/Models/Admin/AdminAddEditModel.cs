@@ -10,5 +10,9 @@ namespace WebCore.Domain.Models.Admin
     {
         public List<PropertyModel> Properties { get; set; }
         public ModuleEntity Item { get; set; }
+        public PageMode PageMode { get; set; }
+
+        public bool IsReadOnlyView => PageMode == PageMode.Details;
+        public string FormTitle => $"{Item?.Id}{(Item != null ? " - " : "")}{Item.GetType().Name} - {PageMode}";
     }
 }

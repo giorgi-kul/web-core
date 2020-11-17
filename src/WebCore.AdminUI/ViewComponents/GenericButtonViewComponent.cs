@@ -11,7 +11,7 @@ namespace WebCore.AdminUI.ViewComponents
 {
     public class GenericButtonViewComponent : ViewComponent
     {
-        public Task<IViewComponentResult> InvokeAsync(string action, string controller, int? id, string buttonClass, string iconClass)
+        public Task<IViewComponentResult> InvokeAsync(string action, string controller, string buttonClass, string iconClass, string buttonText, int? id = null)
         {
             string url = $"{Url.Action(action, controller, new { id })}{Request.QueryString.Value}";
 
@@ -19,7 +19,8 @@ namespace WebCore.AdminUI.ViewComponents
             {
                 Url = url,
                 ButtonClass = buttonClass,
-                IconClass = iconClass
+                IconClass = iconClass,
+                ButtonText = buttonText
             }));
         }
     }

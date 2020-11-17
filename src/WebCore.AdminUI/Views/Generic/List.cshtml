@@ -67,15 +67,7 @@
                                                 }
                                                 else
                                                 {
-                                                    @prop.Property.GetValue(item)
-                                                    @*if (prop.Settings.IsMultilang)
-                                                        {
-                                                            @Model.GetMultilangValue(prop.Property.GetValue(item) as string)
-                                                        }
-                                                        else
-                                                        {
-                                                            @prop.Property.GetValue(item)
-                                                        }*@
+                                                    <vc:generic-field-input property="@prop" item="@item" read-only="true"></vc:generic-field-input>
                                                 }
                                             </td>
                                         }
@@ -85,17 +77,17 @@
                                         <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                             @if (Model.DetailsEnabled)
                                             {
-                                                <vc:generic-button action="details" controller="@ViewContext.RouteData.Values["controller"].ToString()" id="@item.Id" button-class="btn btn-secondary btn-icon" icon-class="file-text"></vc:generic-button>
+                                                <vc:generic-button action="details" controller="@ViewContext.RouteData.Values["controller"].ToString()" id="@item.Id" button-class="btn btn-secondary btn-icon" icon-class="file-text" button-text=""></vc:generic-button>
                                             }
 
                                             @if (Model.EditEnabled)
                                             {
-                                                <vc:generic-button action="edit" controller="@ViewContext.RouteData.Values["controller"].ToString()" id="@item.Id" button-class="btn btn-primary btn-icon" icon-class="edit"></vc:generic-button>
+                                                <vc:generic-button action="edit" controller="@ViewContext.RouteData.Values["controller"].ToString()" id="@item.Id" button-class="btn btn-primary btn-icon" icon-class="edit" button-text=""></vc:generic-button>
                                             }
 
                                             @if (Model.DeleteEnabled)
                                             {
-                                                <vc:generic-button action="" controller="" id="@item.Id" button-class="btn btn-danger btn-icon" icon-class="trash"></vc:generic-button>
+                                                <vc:generic-button action="" controller="" id="@item.Id" button-class="btn btn-danger btn-icon" icon-class="trash" button-text=""></vc:generic-button>
                                             }
                                         </div>
                                     </td>
@@ -108,8 +100,6 @@
         </div>
     </div>
     <div class="col-md-12">
-        <vc:pager shown-page-number="5" , total-items="@Model.TotalCount" items-per-page="@Model.ItemsPerPage"></vc:pager>
+        <vc:pager shown-page-number="5" total-items="@Model.TotalCount" items-per-page="@Model.ItemsPerPage"></vc:pager>
     </div>
 </div>
-
-
