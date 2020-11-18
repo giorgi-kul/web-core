@@ -18,7 +18,7 @@ namespace WebCore.AdminUI.Controllers
 
         public LogsController(
             DataContext context,
-            ILogger<Log> logger) : base(logger, context)
+            ILogger<GenericController<Log>> logger) : base(logger, context)
         {
 
         }
