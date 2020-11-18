@@ -119,8 +119,19 @@ namespace WebCore.AdminUI.Controllers
                 return RedirectToList();
             }
 
+            _currentPageMode = PageMode.Create;
+
             try
             {
+                bool isDuplicate = await CheckDuplicates(item);
+                if (isDuplicate)
+                    return View(CreateEditDetailsView, new AdminAddEditModel
+                    {
+                        PageMode = _currentPageMode,
+                        Properties = Properties,
+                        Item = item
+                    });
+
                 item.CreateDate = DateTime.Now;
                 item.OrderIndex = _context.Set<T>().ActiveSet().Count() > 0 ? _context.Set<T>().ActiveSet().Max(i => i.OrderIndex) + 1 : 1;
 
@@ -228,6 +239,32 @@ namespace WebCore.AdminUI.Controllers
             return Task.FromResult((IActionResult)RedirectToAction("edit", new { id = itemId, pageId = Request.Query["pageId"] }));
         }
 
+        private async Task<bool> CheckDuplicates(T item)
+        {
+            foreach (var prop in Properties)
+            {
+                if (prop.Settings.CheckDuplicate)
+                {
+                    var propertyValue = prop.Property.GetValue(item);
+
+                    var parameter = Expression.Parameter(typeof(T), "x");
+                    var property = Expression.Property(parameter, prop.Property.Name); //x.{DynamicPropertyName}
+                    var contains = typeof(string).GetMethod("Equals", new[] { typeof(string) });
+                    var value = Expression.Constant(propertyValue);
+                    var body = Expression.Call(property, contains, value); //x.{DynamicPropertyName}.Equals(val)
+
+                    var isDuplicate = await _context.Set<T>().ActiveSet().AnyAsync(Expression.Lambda<Func<T, bool>>(body, parameter));
+
+                    if (isDuplicate)
+                    {
+                        SetErrorAlert($"Duplicate value of property {prop.Property.Name} ({propertyValue}) already exists.");
+                        return isDuplicate;
+                    }
+                }
+            }
+
+            return false;
+        }
         private Expression<Func<T, bool>> StringFieldFilterPredicate(PropertyModel prop, string val)
         {
             var parameter = Expression.Parameter(typeof(T), "x");

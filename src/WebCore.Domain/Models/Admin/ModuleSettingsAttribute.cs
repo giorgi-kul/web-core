@@ -25,5 +25,6 @@ namespace WebCore.Domain.Models.Admin
         public EditorType EditorType { get; set; }
         public bool IsRelatedModuleMultilang { get; set; }
         public string Hint { get; set; }
+        public bool CheckDuplicate { get; set; }
     }
 }
