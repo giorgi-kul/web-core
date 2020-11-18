@@ -26,6 +26,8 @@ namespace WebCore.Domain.Database
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<AdministratorAction> AdministratorActions { get; set; }
         public DbSet<Log> Logs { get; set; }
+        public DbSet<Language> Languages { get; set; }
+
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
