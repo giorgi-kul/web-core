@@ -21,8 +21,10 @@ namespace WebCore.AdminUI.Controllers
 {
     public abstract class GenericController<T> : BaseAuthController where T : ModuleEntity, new()
     {
-        private readonly ILogger<T> _logger;
+        private readonly ILogger<GenericController<T>> _logger;
         private readonly DataContext _context;
+        private PageMode _currentPageMode = PageMode.None;
+
 
         protected virtual string ListView => "~/Views/Generic/List.cshtml";
         protected virtual string CreateEditDetailsView => "~/Views/Generic/AddEdit.cshtml";
@@ -38,7 +40,7 @@ namespace WebCore.AdminUI.Controllers
         protected virtual Expression<Func<T, object>> OrderPredicate => x => x.Id;
 
         public GenericController(
-            ILogger<T> logger,
+            ILogger<GenericController<T>> logger,
             DataContext context)
         {
             _context = context;
@@ -80,28 +82,99 @@ namespace WebCore.AdminUI.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            if (!CreateEnabled)
+            {
+                SetErrorAlert("Create mode is not enabled for this module.");
+                return RedirectToList();
+            }
+
+            try
+            {
+                _currentPageMode = PageMode.Create;
+
+                AdminAddEditModel model = new AdminAddEditModel
+                {
+                    PageMode = _currentPageMode,
+                    Properties = Properties,
+                    Item = new T()
+                };
+
+                return View(CreateEditDetailsView, model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to load create view");
+                return RedirectToList();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(T item, string button)
+        {
+            if (!CreateEnabled)
+            {
+                SetErrorAlert("Create mode is not enabled for this module.");
+                return RedirectToList();
+            }
+
+            try
+            {
+                item.CreateDate = DateTime.Now;
+                item.OrderIndex = _context.Set<T>().ActiveSet().Count() > 0 ? _context.Set<T>().ActiveSet().Max(i => i.OrderIndex) + 1 : 1;
+
+                _context.Set<T>().Add(item);
+                await _context.SaveChangesAsync();
+
+                if (button == "save")
+                    return RedirectToList();
+                else
+                    return await RedirectToEdit(item.Id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, $"Failed to create new item ({nameof(T)})", item, button);
+                return View(CreateEditDetailsView, new AdminAddEditModel
+                {
+                    PageMode = _currentPageMode,
+                    Properties = Properties,
+                    Item = item
+                });
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Details([FromQuery] int? page, int id)
         {
-            AdminAddEditModel model = new AdminAddEditModel();
-
             if (!DetailsEnabled)
             {
                 SetErrorAlert("Details view is not enabled for this module.");
                 return RedirectToList(page);
             }
 
-            T item = await _context.Set<T>().ActiveSet().FirstOrDefaultAsync(i => i.Id == id);
-            if (item == null)
+            try
             {
-                SetErrorAlert("Requested record was not found.");
-                return RedirectToList(page);
+                AdminAddEditModel model = new AdminAddEditModel();
+
+                T item = await _context.Set<T>().ActiveSet().FirstOrDefaultAsync(i => i.Id == id);
+                if (item == null)
+                {
+                    SetErrorAlert("Requested record was not found.");
+                    return RedirectToList(page);
+                }
+
+                model.PageMode = PageMode.Details;
+                model.Properties = Properties;
+                model.Item = item;
+
+                return View(CreateEditDetailsView, model);
             }
-
-            model.PageMode = PageMode.Details;
-            model.Properties = Properties;
-            model.Item = item;
-
-            return View(CreateEditDetailsView, model);
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to load details", page, id);
+                return RedirectToList();
+            }
         }
 
         protected virtual Expression<Func<T, bool>> GetFilterPredicate()
@@ -129,6 +202,30 @@ namespace WebCore.AdminUI.Controllers
             }
 
             return predicate;
+        }
+        protected virtual IQueryable<T> Order(IQueryable<T> query)
+        {
+            return query.OrderByDescending(t => t.Id);
+        }
+        protected virtual IActionResult RedirectToList(int? pageId = null)
+        {
+            return RedirectToAction("", new { page = pageId });
+        }
+        protected void SetErrorAlert(string message)
+        {
+            SetAlert(message, AlertType.Error);
+        }
+        protected void SetSuccessAlert(string message)
+        {
+            SetAlert(message, AlertType.Success);
+        }
+        protected void SetWarningAlert(string message)
+        {
+            SetAlert(message, AlertType.Warning);
+        }
+        protected virtual Task<IActionResult> RedirectToEdit(int itemId)
+        {
+            return Task.FromResult((IActionResult)RedirectToAction("edit", new { id = itemId, pageId = Request.Query["pageId"] }));
         }
 
         private Expression<Func<T, bool>> StringFieldFilterPredicate(PropertyModel prop, string val)
@@ -166,29 +263,6 @@ namespace WebCore.AdminUI.Controllers
 
             return Expression.Lambda<Func<T, bool>>(body, parameter);
         }
-
-        protected virtual IQueryable<T> Order(IQueryable<T> query)
-        {
-            return query.OrderByDescending(t => t.Id);
-        }
-
-
-        protected virtual IActionResult RedirectToList(int? pageId = null)
-        {
-            return RedirectToAction("", new { page = pageId });
-        }
-        protected void SetErrorAlert(string message)
-        {
-            SetAlert(message, AlertType.Error);
-        }
-        protected void SetSuccessAlert(string message)
-        {
-            SetAlert(message, AlertType.Success);
-        }
-        protected void SetWarningAlert(string message)
-        {
-            SetAlert(message, AlertType.Warning);
-        }
         private void SetAlert(string message, AlertType type)
         {
             if (string.IsNullOrWhiteSpace(message)) { return; }
@@ -216,7 +290,17 @@ namespace WebCore.AdminUI.Controllers
         {
             get
             {
-                return PropertyHelper.Parse(new T());
+                List<PropertyModel> properties = PropertyHelper.Parse(new T());
+
+                if (_currentPageMode == PageMode.Create)
+                    foreach (var property in properties)
+                        if (property.Property.Name == nameof(AuditableEntity.CreatedBy)
+                         || property.Property.Name == nameof(AuditableEntity.LastModifiedBy)
+                         || property.Property.Name == nameof(AuditableEntity.LastModifyDate)
+                         || property.Property.Name == nameof(AuditableEntity.CreateDate))
+                            property.Settings.IsHidden = true;
+
+                return properties;
             }
         }
     }

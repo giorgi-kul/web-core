@@ -7,12 +7,10 @@ using WebCore.Domain.Models.Admin;
 
 namespace WebCore.AdminUI.Models.VcModels
 {
-    public class GenericFieldInputVcModel
+    public class GenericRenderPropertiesVcModel
     {
-        public PropertyModel Property { get; set; }
+        public List<PropertyModel> Properties { get; set; }
         public ModuleEntity Item { get; set; }
-        public bool? ReadOnly { get; set; }
-
-        public string Value => this.Property?.Property?.GetValue(this.Item)?.ToString();
+        public PageMode PageMode { get; set; }
     }
 }

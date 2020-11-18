@@ -7,6 +7,7 @@ namespace WebCore.Domain.Models.Admin
 {
     public enum PageMode
     {
+        None = -1,
         List = 0,
         Create = 1,
         Edit = 2,

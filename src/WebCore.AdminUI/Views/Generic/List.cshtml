@@ -18,7 +18,7 @@
     @if (Model.CreateEnabled)
     {
         <div class="col-md-12">
-            <a href="" class="btn btn-primary mb-3"></a>
+            <a href="@Url.Action("create")" class="btn btn-primary mb-3">Create</a>
         </div>
     }
 
@@ -44,34 +44,7 @@
                             @foreach (var item in Model.Items)
                             {
                                 <tr>
-
-                                    @foreach (var prop in Model.Properties)
-                                    {
-                                        if (prop.Settings.IsListVisible)
-                                        {
-                                            <td>
-                                                @if (prop.Settings.RelatedModuleType != null)
-                                                {
-                                                    ModuleEntity val = prop.Property.GetValue(item) as ModuleEntity;
-                                                    if (val != null)
-                                                    {
-                                                        @*if (prop.Settings.IsRelatedModuleMultilang)
-                                                            {
-                                                                @Model.GetMultilangValue(val.Title)
-                                                            }
-                                                            else
-                                                            {*@
-                                                        @val.Title
-                                                        //}
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <vc:generic-field-input property="@prop" item="@item" read-only="true"></vc:generic-field-input>
-                                                }
-                                            </td>
-                                        }
-                                    }
+                                    <vc:generic-render-properties properties="@Model.Properties" item="@item" page-mode="List"></vc:generic-render-properties>
 
                                     <td class="text-right" style="min-width: 60px;vertical-align: middle;">
                                         <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">

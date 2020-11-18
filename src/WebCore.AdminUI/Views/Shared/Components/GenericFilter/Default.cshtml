@@ -1,45 +1,48 @@
 ﻿@model WebCore.AdminUI.Models.VcModels.GenericFilterVcModel
 
-<div class="col-md-12 grid-margin stretch-card">
-    <div class="card">
-        <div class="card-body">
-            <form method="get" class="js-filter-form">
-                <div class="form-row align-items-center">
-                    @foreach (var item in Model.Properties)
-                    {
-                        if (item.Settings.Filter)
+@if (Model.Properties.Any(prop => prop.Settings.Filter))
+{
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <form method="get" class="js-filter-form">
+                    <div class="form-row align-items-center">
+                        @foreach (var item in Model.Properties)
                         {
-                            if (item.Property.PropertyType.IsEnum)
+                            if (item.Settings.Filter)
                             {
-                                <select asp-items="Html.GetEnumSelectList(item.Property.PropertyType)"></select>
-                            }
-                            else if (item.Property.PropertyType == typeof(DateTime))
-                            {
-                                <div class="col-auto">
-                                    <input type="text" class="form-control datepicker" name="@($"filter.{item.Property.Name.ToLower()}.from")" placeholder="@item.GetPropertyName() from" value="@Context.Request.Query[$"filter.{item.Property.Name.ToLower()}.from"]">
-                                </div>
+                                if (item.Property.PropertyType.IsEnum)
+                                {
+                                    <select asp-items="Html.GetEnumSelectList(item.Property.PropertyType)"></select>
+                                }
+                                else if (item.Property.PropertyType == typeof(DateTime))
+                                {
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control datepicker" name="@($"filter.{item.Property.Name.ToLower()}.from")" placeholder="@item.GetPropertyName() from" value="@Context.Request.Query[$"filter.{item.Property.Name.ToLower()}.from"]">
+                                    </div>
 
-                                <div class="col-auto">
-                                    <input type="text" class="form-control datepicker" name="@($"filter.{item.Property.Name.ToLower()}.to")" placeholder="@item.GetPropertyName() to" value="@Context.Request.Query[$"filter.{item.Property.Name.ToLower()}.to"]">
-                                </div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control datepicker" name="@($"filter.{item.Property.Name.ToLower()}.to")" placeholder="@item.GetPropertyName() to" value="@Context.Request.Query[$"filter.{item.Property.Name.ToLower()}.to"]">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="@($"filter.{item.Property.Name.ToLower()}")" placeholder="@item.GetPropertyName()" value="@Context.Request.Query[$"filter.{item.Property.Name.ToLower()}"]">
+                                    </div>
+                                }
                             }
-                            else
-                            {
-                                <div class="col-auto">
-                                    <input type="text" class="form-control" name="@($"filter.{item.Property.Name.ToLower()}")" placeholder="@item.GetPropertyName()" value="@Context.Request.Query[$"filter.{item.Property.Name.ToLower()}"]">
-                                </div>
-                            }
+
                         }
 
-                    }
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <button type="reset" class="btn btn-warning js-filter-clear">Clear</button>
+                        </div>
 
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <button type="reset" class="btn btn-warning js-filter-clear">Clear</button>
                     </div>
-
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+}

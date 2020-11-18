@@ -10,7 +10,7 @@ using WebCore.Domain.Models.Admin;
 
 namespace WebCore.AdminUI.ViewComponents
 {
-    public class GenericFieldInputViewComponent : ViewComponent
+    public class GenericFieldCheckboxViewComponent : ViewComponent
     {
         public Task<IViewComponentResult> InvokeAsync(PropertyModel property, ModuleEntity item, PageMode pageMode)
         {

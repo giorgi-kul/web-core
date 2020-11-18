@@ -1,0 +1,27 @@
+﻿@model WebCore.AdminUI.Models.VcModels.GenericRenderPropertiesVcModel
+
+@foreach (var prop in Model.Properties)
+{
+    if (Model.PageMode == PageMode.List && !prop.Settings.IsListVisible)
+        continue;
+    if ((Model.PageMode == PageMode.Create || Model.PageMode == PageMode.Edit || Model.PageMode == PageMode.Details) && prop.Settings.IsHidden)
+        continue;
+
+
+    @if (prop.Settings.RelatedModuleType != null)
+    {
+        ModuleEntity val = prop.Property.GetValue(Model.Item) as ModuleEntity;
+        if (val != null)
+        {
+            @val.Title
+        }
+    }
+    else if (prop.Property.PropertyType == typeof(bool))
+    {
+        <vc:generic-field-checkbox property="@prop" item="@Model.Item" read-only="true" page-mode="@Model.PageMode"></vc:generic-field-checkbox>
+    }
+    else
+    {
+        <vc:generic-field-input property="@prop" item="@Model.Item" read-only="true" page-mode="@Model.PageMode"></vc:generic-field-input>
+    }
+}

@@ -10,13 +10,13 @@ using WebCore.Domain.Models.Admin;
 
 namespace WebCore.AdminUI.ViewComponents
 {
-    public class GenericFieldInputViewComponent : ViewComponent
+    public class GenericRenderPropertiesViewComponent : ViewComponent
     {
-        public Task<IViewComponentResult> InvokeAsync(PropertyModel property, ModuleEntity item, PageMode pageMode)
+        public Task<IViewComponentResult> InvokeAsync(List<PropertyModel> properties, ModuleEntity item, PageMode pageMode)
         {
-            return Task.FromResult((IViewComponentResult)View("", new GenericFieldVcModel()
+            return Task.FromResult((IViewComponentResult)View("", new GenericRenderPropertiesVcModel()
             {
-                Property = property,
+                Properties = properties,
                 Item = item,
                 PageMode = pageMode
             }));

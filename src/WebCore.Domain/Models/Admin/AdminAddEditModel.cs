@@ -13,6 +13,6 @@ namespace WebCore.Domain.Models.Admin
         public PageMode PageMode { get; set; }
 
         public bool IsReadOnlyView => PageMode == PageMode.Details;
-        public string FormTitle => $"{Item?.Id}{(Item != null ? " - " : "")}{Item.GetType().Name} - {PageMode}";
+        public string FormTitle => $"{(Item?.Id > 0 ? $"{Item.Id.ToString()} - " : "")}{Item.GetType().Name} - {PageMode}";
     }
 }

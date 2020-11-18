@@ -1,11 +1,24 @@
-﻿@model WebCore.AdminUI.Models.VcModels.GenericFieldInputVcModel
+﻿@model WebCore.AdminUI.Models.VcModels.GenericFieldVcModel
 
-@if (Model.ReadOnly.HasValue && Model.ReadOnly.Value)
+@if (Model.PageMode == PageMode.List)
 {
-    <p class="col-form-label">@Model.Value</p>
+    <td>
+        @Model.Value
+    </td>
 }
 else
 {
-    <input type="text" class="form-control" id="@Model.Property.Property.Name" autocomplete="off" value="@Model.Value">
+    <div class="form-group row pb-1">
+        <label for="@($"Item.{Model.Property.Property.Name}")" class="col-sm-1 col-form-label">@Model.Property.GetPropertyName()</label>
+        <div class="col-sm-10">
+            @if (Model.PageMode == PageMode.Details)
+            {
+                <p class="col-form-label">@Model.Value</p>
+            }
+            else
+            {
+                <input type="text" class="form-control" id="@Model.Property.Property.Name" name="@($"Item.{Model.Property.Property.Name}")" autocomplete="off" value="@Model.Value">
+            }
+        </div>
+    </div>
 }
-

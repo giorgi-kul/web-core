@@ -9,7 +9,7 @@ namespace WebCore.Domain.Entities
     {
         private DateTime? _createDate;
 
-        [ModuleSettings(Order = 1)]
+        [ModuleSettings(Order = 1, IsHidden = true)]
         public int Id { get; set; }
 
         public virtual DateTime CreateDate

@@ -1,0 +1,35 @@
+﻿@model WebCore.AdminUI.Models.VcModels.GenericFieldVcModel
+
+@if (Model.PageMode == PageMode.List)
+{
+    <td>
+        @if (Convert.ToBoolean(Model.Value))
+        {
+            <i data-feather="check" style="color:green;"></i>
+        }
+        else
+        {
+            <i data-feather="x" style="color:red;"></i>
+        }
+    </td>
+}
+else
+{
+    <div class="form-group row pb-1">
+        <label for="@($"Item.{Model.Property.Property.Name}")" class="col-sm-1 col-form-label">@Model.Property.GetPropertyName()</label>
+        <div class="col-sm-10">
+            @if (Model.PageMode == PageMode.Details)
+            {
+                <p class="col-form-label">@Model.Value</p>
+            }
+            else
+            {
+                <div class="form-check form-check-flat form-check-primary">
+                    <label class="form-check-label">
+                        @Html.CheckBox($"Item.{Model.Property.Property.Name}", (bool)Model.Property.Property.GetValue(Model.Item), new { @class = "form-check-input" })
+                    </label>
+                </div>
+            }
+        </div>
+    </div>
+}

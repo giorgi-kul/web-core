@@ -15,26 +15,17 @@
         <div class="card">
             <div class="card-body">
                 <h6 class="card-title">@Model.FormTitle</h6>
-                <form class="forms-sample">
-                    @foreach (var property in Model.Properties)
-                    {
-                        if (!property.Settings.IsHidden)
-                        {
-                            <div class="form-group row">
-                                <label for="exampleInputUsername2" class="col-sm-1 col-form-label">@property.GetPropertyName()</label>
-                                <div class="col-sm-11">
-                                    <vc:generic-field-input property="@property" item="@Model.Item" read-only="@Model.IsReadOnlyView"></vc:generic-field-input>
-                                </div>
-                            </div>
-                        }
-                    }
+                <form asp-action="@ViewContext.RouteData.Values["action"]" method="post" enctype="multipart/form-data" class="forms-sample">
+
+                    <vc:generic-render-properties properties="@Model.Properties" item="@Model.Item" page-mode="@Model.PageMode"></vc:generic-render-properties>
 
                     <div class="form-group row">
                         <label for="exampleInputUsername2" class="col-sm-1 col-form-label"></label>
                         <div class="col-sm-11">
                             @if (Model.PageMode == PageMode.Create || Model.PageMode == PageMode.Edit)
                             {
-                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                <button type="submit" class="btn btn-primary mr-2" name="save">Save</button>
+                                <button type="submit" class="btn btn-warning mr-2" name="apply">Apply</button>
                             }
                             <vc:generic-button action="" controller="@ViewContext.RouteData.Values["controller"].ToString()" id="null" button-text="Cancel" button-class="btn btn-outline-primary btn-icon-text" icon-class="arrow-left"></vc:generic-button>
                         </div>
