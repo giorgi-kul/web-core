@@ -7,6 +7,7 @@ namespace WebCore.Domain.Entities
 {
     public class ModuleEntity : AuditableEntity
     {
+        [ModuleSettings(IsListVisible = false, IsHidden = true)]
         public virtual string Title { get; set; }
         [ModuleSettings(IsListVisible = false, IsHidden = true)]
         public virtual int OrderIndex { get; set; }

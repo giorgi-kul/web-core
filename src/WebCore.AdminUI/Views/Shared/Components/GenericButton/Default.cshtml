@@ -1,6 +1,24 @@
 ﻿@model WebCore.AdminUI.Models.VcModels.GenericButtonVcModel
 
-<button type="button" class="@Model.ButtonClass" onclick="window.location.href = '@Model.Url'">
+<button type="button" class="@Model.ButtonClass" data-itemId="@Model.ItemId">
     <i class="@($"{(!String.IsNullOrWhiteSpace(Model.ButtonText) ? "btn-icon-prepend" : String.Empty)}")" data-feather="@Model.IconClass"></i>
     @Model.ButtonText
 </button>
+
+<script>
+    function deleteGenericItem_@(Model.ItemId)(url) {
+
+        window.deleteItemId = @(Model.ItemId);
+            @*$.ajax({
+            url: url,
+            data: {
+                id: @(Model.ItemId),
+                //__RequestVerificationToken: $('input[name="__RequestVerificationToken"]', $('#__AjaxAntiForgeryForm')).val(),
+            },
+            type: 'DELETE',
+            success: function (response) {
+                location.reload();
+            }
+        });*@
+    }
+</script>

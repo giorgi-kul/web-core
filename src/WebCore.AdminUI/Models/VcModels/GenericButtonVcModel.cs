@@ -11,5 +11,8 @@ namespace WebCore.AdminUI.Models.VcModels
         public string ButtonClass { get; set; }
         public string Url { get; set; }
         public string ButtonText { get; set; }
+        public int? ItemId { get; set; }
+
+        public bool PerformDelete => ButtonClass.Contains("js-generic-delete-item");
     }
 }

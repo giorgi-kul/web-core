@@ -20,6 +20,13 @@
             }, 1)
         });
 
+        setTimeout(function () {
+            $(".js-generic-delete-item").on('click', function () {
+                alert($(this).data('itemid'));
+            });
+        });
+        
+
         // Enable feather-icons with SVG markup
         feather.replace();
 

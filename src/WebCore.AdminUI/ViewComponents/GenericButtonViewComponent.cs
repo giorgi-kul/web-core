@@ -20,7 +20,8 @@ namespace WebCore.AdminUI.ViewComponents
                 Url = url,
                 ButtonClass = buttonClass,
                 IconClass = iconClass,
-                ButtonText = buttonText
+                ButtonText = buttonText,
+                ItemId = id
             }));
         }
     }

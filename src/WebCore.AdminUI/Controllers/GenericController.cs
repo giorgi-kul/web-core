@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Threading.Tasks;
 using WebCore.AdminUI.Models;
 using WebCore.Common.Helpers;
@@ -185,6 +186,40 @@ namespace WebCore.AdminUI.Controllers
             {
                 _logger.LogCritical(ex, "Failed to load details", page, id);
                 return RedirectToList();
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!DeleteEnabled)
+            {
+                SetErrorAlert("Delete function is not enabled for this module.");
+                return RedirectToList();
+            }
+
+            try
+            {
+                T requestedItem = await _context.Set<T>().FirstOrDefaultAsync(i => i.Id == id);
+
+                if (requestedItem == null)
+                {
+                    SetErrorAlert("Invalid request.");
+                    return NoContent();
+                }
+
+                requestedItem.IsDeleted = true;
+
+                await _context.SaveChangesAsync();
+
+                SetSuccessAlert("Item has been successfully deleted.");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Failed to delete an item", id);
+                return BadRequest();
             }
         }
 
