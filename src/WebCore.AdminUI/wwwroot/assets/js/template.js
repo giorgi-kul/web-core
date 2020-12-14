@@ -22,10 +22,24 @@
 
         setTimeout(function () {
             $(".js-generic-delete-item").on('click', function () {
-                alert($(this).data('itemid'));
+                window.generic_delete_item_id = $(this).data('itemid');
             });
+
+            $(".js-generic-delete-confirmed").on('click', function () {
+                $.ajax({
+                    url: $(this).data('delete-url'),
+                    data: {
+                        id: window.generic_delete_item_id,
+                    },
+                    type: 'DELETE',
+                    success: function (response) {
+                        $("#exampleModal").modal('hide');
+                        location.reload();
+                    }
+                });
+            })
         });
-        
+
 
         // Enable feather-icons with SVG markup
         feather.replace();

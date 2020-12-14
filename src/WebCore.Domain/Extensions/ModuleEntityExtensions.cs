@@ -9,6 +9,11 @@ namespace WebCore.Domain.Extensions
 {
     public static class ModuleEntityExtensions
     {
+        public static IQueryable<object> Set(this DbContext _context, Type t)
+        {
+            return (IQueryable<object>)_context.GetType().GetMethod("Set").MakeGenericMethod(t).Invoke(_context, null);
+        }
+
         public static IQueryable<T> ActiveSet<T>(this DbSet<T> set) where T : ModuleEntity
         {
             return set.Where(i => !i.IsDeleted);
